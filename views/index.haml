@@ -1,0 +1,51 @@
+:javascript
+  $(document).ready(function() {
+
+    $.ajax({
+      url: 'movies/movies.json',
+      async: false,
+      dataType: 'json',
+      success: function (json) {
+        data = json;
+      }
+    });
+
+    html = $.trim($("#template").html())
+    template = Mustache.compile(html)
+
+    var view = function(record, index){
+      return template({record: record, index: index});
+    };
+
+    st = StreamTable('#stream_table',
+      { 
+        view: view,
+      },
+      data
+    );
+  });
+
+%div.container
+  %div.example
+    %div.title
+      %h1 Sinatra StreamTable
+
+  %table#stream_table.table.table-striped.table-bordered
+    %thead
+      %tr
+        %th #
+        %th Name
+        %th Director
+        %th Actor
+        %th Rating
+        %th Year
+    %tbody  
+
+    %script#template{:type => "text/html"}
+      %tr
+        %td {{index}}
+        %td {{record.name}}
+        %td {{record.director}}
+        %td {{record.actor}}
+        %td {{record.rating}}
+        %td {{record.year}}
